@@ -28,4 +28,4 @@ To run, first install the requirements as found in the requirements.txt file. Ne
 python main.py
 ```
 
-The test API can be found at the listen port (as configured in the settings.yaml file), for example [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+The test API can be found at the listen port (as configured in the settings.yaml file), for example [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). 
