@@ -3,7 +3,7 @@ import uvicorn
 import yaml
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from passworder import Passworder
 from random_password import get_random_salt
@@ -34,10 +34,12 @@ async def generators_list():
 
 @app.get("/encrypt/version")
 async def show_version():
-    with open("version.txt", "r") as version_file:
-        version = version_file.read()
-    return {"version": version}
-
+    try:
+        with open("version.txt", "r") as version_file:
+            version = version_file.read()
+        return {"version": version}
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail="Version file missing or not readeable")
 
 @app.post("/encrypt/")
 async def encrypt(encrypt_request: EncryptRequest):
@@ -45,9 +47,9 @@ async def encrypt(encrypt_request: EncryptRequest):
     try:
         # Request validation steps..
         if not encrypt_request.cleartext:
-            raise ValueError("Missing cleartext entry to encrypt")
+            raise HTTPException(status_code=400, detail="Missing cleartext entry to encrypt")
         if not encrypt_request.random_salt and not encrypt_request.salt:
-            raise ValueError("Either random salt or a set salt should be given")
+            raise HTTPException(status_code=400, detail="Either random salt or a set salt should be given")
 
         parameters = encrypt_request.dict()
 
@@ -56,16 +58,22 @@ async def encrypt(encrypt_request: EncryptRequest):
         if parameters.get("random_salt"):
             parameters["salt"] = get_random_salt()
         del parameters["random_salt"]
-        shadow_string = passworder.get_linux_password(**parameters)
+
+        try:
+            shadow_string = passworder.get_linux_password(**parameters)
 
         result = {
             "shadow_string": shadow_string,
             "salt": parameters["salt"],
         }
+    except HTTPException as e:
+        # Reraising the HTTP exception here, otherwise it will be picked up by
+        # the generic exception handler
+        raise e
     except Exception as e:
         print(e)
         traceback.print_exc()
-        result = {"error": str(e)}
+        raise HTTPException(status_code=503, detail=str(e))
     finally:
         return result
 
