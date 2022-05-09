@@ -59,8 +59,7 @@ async def encrypt(encrypt_request: EncryptRequest):
             parameters["salt"] = get_random_salt()
         del parameters["random_salt"]
 
-        try:
-            shadow_string = passworder.get_linux_password(**parameters)
+        shadow_string = passworder.get_linux_password(**parameters)
 
         result = {
             "shadow_string": shadow_string,
