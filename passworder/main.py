@@ -37,6 +37,7 @@ async def show_version():
     try:
         with open("version.txt", "r") as version_file:
             version = version_file.read()
+            version = version.strip()
         return {"version": version}
     except FileNotFoundError as e:
         raise HTTPException(status_code=503, detail="Version file missing or not readeable")
