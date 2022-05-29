@@ -1,7 +1,7 @@
 name: Github commit action
 on: [push]
 jobs:
-  flake8_py3:
+  integration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,9 +14,8 @@ jobs:
         run: pip install flake8
       - name: Install requirements
         run: pip install -r requirements.txt
-      - name: Run flake8
-        continue-on-error: true
-        run: flake8
-        working-directory: ./passworder
-      - name: Run unittests
-        run: python -m unittest discover .
+      # The next steps should be added by you!
+      # - Test the code with flake8
+      # - Run the unittests
+      # - Build the docker image
+      # - Push the docker image to hub.docker.com (you'll need an account there!)
