@@ -1,17 +1,24 @@
 name: GitHub Actions Demo
-on: [push]
+on:
+  push:
+    paths:
+      - '*.py'
+
 jobs:
-  Explore-GitHub-Actions:
+  flake8_py3:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: x64
+      - name: Install flake8
+        run: pip install flake8
+      - name: Install requirements
+        run: pip install -f requirements.txt
+      - name: Run flake8
+        run: flake8
+        working-directory: ./passworder
+      - name: Run unittests
+        run: python -m unittest discover .
