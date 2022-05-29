@@ -67,7 +67,7 @@ async def encrypt(encrypt_request: EncryptRequest):
             "salt": parameters["salt"],
         }
     except HTTPException as e:
-        # Reraising the HTTP exception here, otherwise it will be picked up by
+        # Raising the HTTP exception here, otherwise it will be picked up by
         # the generic exception handler
         raise e
     except Exception as e:
