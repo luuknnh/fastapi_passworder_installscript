@@ -12,7 +12,7 @@ jobs:
       - name: Install flake8
         run: pip install flake8
       - name: Install requirements
-        run: pip install -f requirements.txt
+        run: pip install -r requirements.txt
       - name: Run flake8
         run: flake8
         working-directory: ./passworder
