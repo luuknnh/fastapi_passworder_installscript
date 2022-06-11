@@ -29,4 +29,4 @@ mv ./passworder_test passworder;
 
 cd passworder/passworder;
 
-python3 main.py;
+python3 passworder/main.py;
