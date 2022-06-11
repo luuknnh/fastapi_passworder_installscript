@@ -1,3 +1,4 @@
+#!bin/sh 
 dirname="passworder_test"
 
 if [ ! -d $dirname ];
@@ -27,6 +28,6 @@ cd ../../;
 
 mv ./passworder_test passworder;
 
-cd passworder/passworder;
+cd passworder;
 
-python3 passworder/main.py;
+python3 main.py;
