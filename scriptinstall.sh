@@ -1,4 +1,4 @@
-#!bin/sh 
+#!/bin/bash
 dirname="passworder_test"
 
 if [ ! -d $dirname ];
