@@ -4,5 +4,7 @@ services:
     build: .
     ports:
       - "80:8000"
+    volumes:
+      - "/tmp/log/"
   redis:
     image: "redis:alpine"

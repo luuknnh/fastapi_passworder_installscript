@@ -2,6 +2,8 @@ import traceback
 import uvicorn
 import yaml
 from typing import Optional
+import logging
+from starlette.requests import Request
 
 from fastapi import FastAPI, HTTPException
 
@@ -19,12 +21,20 @@ class EncryptRequest(BaseModel):
 
 with open("settings.yaml") as settings_file:
     settings = yaml.safe_load(settings_file)
+    logging_file_dir = settings["logging_directory"] + "hier-log-ik.log"
 main_parameters = {}
 if not settings["openapi_console"]:
     main_parameters["docs_url"] = None
 
 app = FastAPI(**main_parameters)
 passworder = Passworder()
+
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(filename=logging_file_dir,
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(message)s',
+                    datefmt='%m/%d/%Y %I:%M:%S $p')
 
 
 @app.get("/encrypt/generators")
@@ -43,7 +53,8 @@ async def show_version():
         raise HTTPException(status_code=503, detail="Version file missing or not readeable")
 
 @app.post("/encrypt/")
-async def encrypt(encrypt_request: EncryptRequest):
+async def encrypt(encrypt_request: EncryptRequest, request: Request):
+    logging.info(f"200 {request.client.host} {encrypt_request.algorithm}")
     result = {}
     try:
         # Request validation steps..
