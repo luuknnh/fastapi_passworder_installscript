@@ -8,14 +8,19 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.x'
+          python-version: "3.x"
           architecture: x64
       - name: Install flake8
         run: pip install flake8
       - name: Install requirements
         run: pip install -r requirements.txt
-      # The next steps should be added by you!
-      # - Test the code with flake8
-      # - Run the unittests
-      # - Build the docker image
-      # - Push the docker image to hub.docker.com (you'll need an account there!)
+      - name: flake8 testing
+        run: flake8 ./
+      - name: run the unittests
+        run: python3 -m unittest discover .
+      - name: Docker loggingin
+        run: docker login -u=YOURUSERNAME -p=YOURPASSWORD
+      - name: Docker build
+        run: docker build -t luuknnh/passworder:viaplay .
+      - name: Docker push
+        run: docker push luuknnh/passworder:viaplay
